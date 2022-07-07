@@ -71,8 +71,14 @@ def n_palavras_diferentes(lista_palavras):
 
 def compara_assinatura(as_a, as_b):
     '''IMPLEMENTAR. Essa funcao recebe duas assinaturas de texto e deve devolver o grau de similaridade nas assinaturas.'''
-    
-    pass
+    i = 0
+    somatorio = 0
+    while i < len(as_a):
+        somatorio += abs(as_a[i] - as_b[i])
+        i += 1
+    grau_similaridade = somatorio / 6
+    return grau_similaridade
+
 
 def calcula_assinatura(texto):
     '''IMPLEMENTAR. Essa funcao recebe um texto e deve devolver a assinatura do texto.'''
@@ -91,27 +97,10 @@ def calcula_assinatura(texto):
         soma_tam_palavras += len(palavra)
     wal_b = soma_tam_palavras / len(palavras)
 
-    palavras_unicas = []
-    i = 0
-    for palavra in palavras:
-        while palavra != palavras_unicas[i]:
-            i += 1
-            if i == len(palavras_unicas):
-                palavras_unicas.append(palavra)
-                break
-    ttr_b = len(palavras_unicas) / len(palavras)
+    ttr_b = n_palavras_diferentes(palavras) / len(palavras)
 
-    palavra_uma_vez = []
-    cont = 0
-    for i in range(len(palavras)):
-        j = 1
-        while j < (len(palavras) - i):
-            if palavra[i] == palavra[i+j]:
-                cont += 1
-            j = j + 1
-        if cont == 0:
-            palavra_uma_vez.append(palavra[i])
-    hlr_b = len(palavra_uma_vez) / len(palavras)
+    hlr_b = n_palavras_unicas(palavras) / len(palavras)
+
 
     soma_caractere_sentencas = 0
     for sentenca in sentencas:
@@ -130,4 +119,30 @@ def calcula_assinatura(texto):
 
 def avalia_textos(textos, ass_cp):
     '''IMPLEMENTAR. Essa funcao recebe uma lista de textos e uma assinatura ass_cp e deve devolver o numero (1 a n) do texto com maior probabilidade de ter sido infectado por COH-PIAH.'''
-    pass
+    grau_similaridade = []
+    for texto in textos:
+        ass_b = calcula_assinatura(texto)
+        grau = compara_assinatura(ass_cp, ass_b)
+        grau_similaridade.append(grau)
+
+    i = 0
+    mais_similar = 100
+    while i < len(grau_similaridade):
+        if grau_similaridade[i] < mais_similar: 
+            mais_similar = grau_similaridade[i]
+            posicao = i + 1
+        i += 1
+    return posicao
+
+
+ass_a = le_assinatura()
+
+textos = le_textos()
+maior_similaridade = avalia_textos(textos, ass_a)
+
+print("O autor do texto", maior_similaridade, "está infectado")
+
+
+
+
+
